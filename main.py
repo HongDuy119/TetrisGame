@@ -1,6 +1,7 @@
 import pygame # import pygame
 from copy import deepcopy # -1 điểm không biết là gì
 from random import choice, randrange  
+import time
 
 W, H = 10, 20 # width = 10, height = 20
 TILE = 35 # size of cell
@@ -34,12 +35,25 @@ figures = [[pygame.Rect(x + W // 2, y + 1, 1, 1) for x, y in fig_pos] for fig_po
 figure_rect = pygame.Rect(0, 0, TILE - 1, TILE - 1 ) # size mỗi ô vuông trong viên gạch -1 điểm vì trả lời sai 
 field = [[0 for i in range(W)] for j in range(H)] 
 
+pausing = False
+#over 
+def game_over():
+    gfont = pygame.font.SysFont('cosolas',40)
+    gsurf = gfont.render('Game over!',True, pygame.Color(255,0,0))
+    grect = gsurf.get_rect()
+    grect.midtop = (500,150)
+    sc.blit(gsurf,grect)
+    pygame.display.flip()
+    time.sleep(10 )
+    # pygame.quit()
+
 anim_count, anim_speed, anim_limit = 0, 60, 3000
 # anim_acount = ?
 # anim_speed = speed 
 # anima_limit = time delay start game ( 3000 = 3s )
 bg = pygame.image.load('img/bg.jpg').convert() # load ảnh
 game_bg = pygame.image.load('img/bg2.jpg').convert() # load ảnh
+
 
 main_font = pygame.font.Font('font/font.ttf', 65) # load font 
 font = pygame.font.Font('font/font.ttf', 45) # load font
@@ -102,6 +116,8 @@ while True:
                 anim_limit = 100
             elif event.key == pygame.K_SPACE:
                 rotate = True
+            elif event.key == pygame.K_p:
+                pygame.K_PAUSE
             
                 
     # move x
@@ -179,6 +195,7 @@ while True:
     # game over
     for i in range(W):
         if field[0][i]:
+            game_over()
             set_record(record, score)
             field = [[0 for i in range(W)] for i in range(H)]
             anim_count, anim_speed, anim_limit = 0, 60, 2000
@@ -188,6 +205,5 @@ while True:
                 sc.blit(game_sc, (0, 0))
                 pygame.display.flip()
                 clock.tick(200)
-
     pygame.display.flip()
     clock.tick(FPS) 
