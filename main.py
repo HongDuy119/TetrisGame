@@ -1,55 +1,57 @@
-import pygame
-from copy import deepcopy
-from random import choice, randrange
+import pygame # import pygame
+from copy import deepcopy # -1 điểm không biết là gì
+from random import choice, randrange  
 
-W, H = 10, 20
-TILE = 35
-GAME_RES = W * TILE, H * TILE
-RES = 700, 700
+W, H = 10, 20 # width = 10, height = 20
+TILE = 35 # size of cell
+GAME_RES = W * TILE, H * TILE # size of window game
+RES = 700, 700 # size of window
 FPS = 45
 
-file = 'B.mp3'
-pygame.init()
-pygame.mixer.init()
+file = 'B.mp3' # music 
+pygame.init() 
+pygame.mixer.init() # -1 điểm vì không biết là gì
 pygame.mixer.music.load(file)
 pygame.mixer.music.play()
 pygame.event.wait()
 
-pygame.init()
-sc = pygame.display.set_mode(RES)
-game_sc = pygame.Surface(GAME_RES)
-clock = pygame.time.Clock()
+# pygame.init()  -1 điểm vì khai báo đéo để làm gì
+sc = pygame.display.set_mode(RES) # init window
+game_sc = pygame.Surface(GAME_RES) # window play
+clock = pygame.time.Clock() # time
 
-grid = [pygame.Rect(x * TILE, y * TILE, TILE, TILE) for x in range(W) for y in range(H)]
+grid = [pygame.Rect(x * TILE, y * TILE, TILE, TILE) for x in range(W) for y in range(H)] # draw rectangle
 
-figures_pos = [[(-1, 0), (-2, 0), (0, 0), (1, 0)],
+figures_pos = [[(-1, 0), (-2, 0), (0, 0), (1, 0)], # init point of rectangle
                [(0, -1), (-1, -1), (-1, 0), (0, 0)],
                [(-1, 0), (-1, 1), (0, 0), (0, -1)],
                [(0, 0), (-1, 0), (0, 1), (-1, -1)],
                [(0, 0), (0, -1), (0, 1), (-1, -1)],
                [(0, 0), (0, -1), (0, 1), (1, -1)],
-               [(0, 0), (0, -1), (0, 1), (-1, 0)]]
+               [(0, 0), (0, -1), (0, 1), (-1, 0)]] 
 
-figures = [[pygame.Rect(x + W // 2, y + 1, 1, 1) for x, y in fig_pos] for fig_pos in figures_pos]
-figure_rect = pygame.Rect(0, 0, TILE - 2, TILE - 2)
-field = [[0 for i in range(W)] for j in range(H)]
+figures = [[pygame.Rect(x + W // 2, y + 1, 1, 1) for x, y in fig_pos] for fig_pos in figures_pos] # tạo viên gạch rơi trên xuống (array)
+figure_rect = pygame.Rect(0, 0, TILE - 1, TILE - 1 ) # size mỗi ô vuông trong viên gạch -1 điểm vì trả lời sai 
+field = [[0 for i in range(W)] for j in range(H)] 
 
-anim_count, anim_speed, anim_limit = 0, 60, 2000
+anim_count, anim_speed, anim_limit = 0, 60, 3000
+# anim_acount = ?
+# anim_speed = speed 
+# anima_limit = time delay start game ( 3000 = 3s )
+bg = pygame.image.load('img/bg.jpg').convert() # load ảnh
+game_bg = pygame.image.load('img/bg2.jpg').convert() # load ảnh
 
-bg = pygame.image.load('img/bg.jpg').convert()
-game_bg = pygame.image.load('img/bg2.jpg').convert()
+main_font = pygame.font.Font('font/font.ttf', 65) # load font 
+font = pygame.font.Font('font/font.ttf', 45) # load font
 
-main_font = pygame.font.Font('font/font.ttf', 65)
-font = pygame.font.Font('font/font.ttf', 45)
+title_tetris = main_font.render('TETRIS', True, pygame.Color('darkorange')) # init text
+title_score = font.render('score:', True, pygame.Color('green')) # init text 
+title_record = font.render('record:', True, pygame.Color('purple')) # init text
 
-title_tetris = main_font.render('TETRIS', True, pygame.Color('darkorange'))
-title_score = font.render('score:', True, pygame.Color('green'))
-title_record = font.render('record:', True, pygame.Color('purple'))
+get_color = lambda : (randrange(1, 256), randrange(1, 200), randrange(1, 250)) # function random color brick
 
-get_color = lambda : (randrange(1, 256), randrange(1, 200), randrange(1, 250))
-
-figure, next_figure = deepcopy(choice(figures)), deepcopy(choice(figures))
-color, next_color = get_color(), get_color()
+figure, next_figure = deepcopy(choice(figures)), deepcopy(choice(figures))  
+color, next_color = get_color(), get_color() 
 
 score, lines = 0, 0
 scores = {0: 0, 1: 100, 2: 300, 3: 700, 4: 1500}
@@ -63,7 +65,7 @@ def check_borders():
     return True
 
 
-def get_record():
+def get_record(): # lấy score từ file
     try:
         with open('record') as f:
             return f.readline()
@@ -72,14 +74,15 @@ def get_record():
             f.write('0')
 
 
-def set_record(record, score):
+def set_record(record, score): # viết score vào file
     rec = max(int(record), score)
     with open('record', 'w') as f:
         f.write(str(rec))
 
 while True:
-    record = get_record()
+    record = get_record() # lấy score từ file
     dx, rotate = 0, False
+    # draw background
     sc.blit(bg, (350, 0))
     sc.blit(game_sc, (0, 0))
     game_sc.blit(game_bg, (0, 0))
@@ -97,8 +100,10 @@ while True:
                 dx = 1
             elif event.key == pygame.K_DOWN:
                 anim_limit = 100
-            elif event.key == pygame.K_UP:
+            elif event.key == pygame.K_SPACE:
                 rotate = True
+            
+                
     # move x
     figure_old = deepcopy(figure)
     for i in range(4):
@@ -185,4 +190,4 @@ while True:
                 clock.tick(200)
 
     pygame.display.flip()
-    clock.tick(FPS)
+    clock.tick(FPS) 
