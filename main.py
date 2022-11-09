@@ -116,10 +116,6 @@ while True:
                 anim_limit = 100
             elif event.key == pygame.K_SPACE:
                 rotate = True
-            elif event.key == pygame.K_p:
-                pygame.K_PAUSE
-            
-                
     # move x
     figure_old = deepcopy(figure)
     for i in range(4):
@@ -171,10 +167,10 @@ while True:
     # draw grid
     [pygame.draw.rect(game_sc, (40, 40, 40), i_rect, 1) for i_rect in grid]
     # draw figure
-    for i in range(4):
-        figure_rect.x = figure[i].x * TILE
-        figure_rect.y = figure[i].y * TILE
-        pygame.draw.rect(game_sc, color, figure_rect)
+    # for i in range(4):
+    #     figure_rect.x = figure[i].x * TILE
+    #     figure_rect.y = figure[i].y * TILE
+    #     pygame.draw.rect(game_sc, color, figure_rect)
     # draw field
     for y, raw in enumerate(field):
         for x, col in enumerate(raw):
