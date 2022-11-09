@@ -44,7 +44,7 @@ def game_over():
     grect.midtop = (500,150)
     sc.blit(gsurf,grect)
     pygame.display.flip()
-    time.sleep(10 )
+    time.sleep(3)
     # pygame.quit()
 
 anim_count, anim_speed, anim_limit = 0, 60, 3000
